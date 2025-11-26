@@ -9,10 +9,6 @@ if [ ! -f "${CONFIG_PATH}" ]; then
     cp /app/CONFIG_EXAMPLE.yaml "${CONFIG_PATH}"
 fi
 
-# Print the contents
-echo "Contents of $CONFIG_PATH:"
-cat "$CONFIG_PATH"
-
 echo "===== Environment Variables ====="
 printenv
 echo "================================="

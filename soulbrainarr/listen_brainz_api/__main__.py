@@ -1,25 +1,63 @@
 import requests
+from requests.exceptions import HTTPError, ConnectionError, Timeout, RequestException
 from soulbrainarr.song import Song
 
 LB_BASE = "https://api.listenbrainz.org/1"
 MB_BASE = "https://musicbrainz.org/ws/2"
 
 
-def _fetch_cf_recommendations(username: str, header: dict[str, str], count: int = 20, offset: int = 0, timeout: float = 1.0):
-    """Fetch CF-based recording recommendation mbids from ListenBrainz."""
+def _fetch_cf_recommendations(
+    username: str,
+    header: dict[str, str],
+    count: int = 20,
+    offset: int = 0,
+    timeout: float = 1.0,
+    max_retries: int = 3,
+    backoff_factor: float = 0.5
+):
+    """Fetch CF-based recording recommendation mbids from ListenBrainz with error handling."""
     url = f"{LB_BASE}/cf/recommendation/user/{username}/recording"
     params = {"count": count, "offset": offset}
 
-    # TODO: Add timeout exception and connection closed exceptions to this
-    resp = requests.get(url, params=params, headers=header, timeout=timeout)
-    if resp.status_code == 204:
-        print("No recommendations generated yet (204).")
-        return []
-    resp.raise_for_status()
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.get(url, params=params,
+                                headers=header, timeout=timeout)
 
-    data = resp.json()
-    musicbrainz_suggestion_ids = data.get("payload", {}).get("mbids", [])
-    return musicbrainz_suggestion_ids
+            if resp.status_code == 204:
+                print("No recommendations generated yet (204).")
+                return []
+
+            resp.raise_for_status()
+            data = resp.json()
+            musicbrainz_suggestion_ids = data.get(
+                "payload", {}).get("mbids", [])
+            return musicbrainz_suggestion_ids
+
+        except (ConnectionError, Timeout) as e:
+            print(f"Attempt {attempt} failed: {e}")
+            if attempt == max_retries:
+                print("Max retries reached. Returning empty list.")
+                return []
+            sleep_time = backoff_factor * (2 ** (attempt - 1))
+            print(f"Retrying in {sleep_time:.1f} seconds...")
+            time.sleep(sleep_time)
+
+        except HTTPError as e:
+            status = getattr(e.response, "status_code", "unknown")
+            print(f"HTTP error {status}: {e}")
+            if 500 <= status < 600 and attempt < max_retries:
+                sleep_time = backoff_factor * (2 ** (attempt - 1))
+                print(f"Server error. Retrying in {sleep_time:.1f} seconds...")
+                time.sleep(sleep_time)
+            else:
+                return []
+
+        except RequestException as e:
+            print(f"Unexpected request error: {e}")
+            return []
+
+    return []
 
 
 def _resolve_recording_mbid(recording_mbid: str, header: dict[str, str], timeout: float = 1.0):
