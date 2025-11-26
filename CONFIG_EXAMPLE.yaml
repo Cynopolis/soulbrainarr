@@ -1,0 +1,26 @@
+# Rename this file to CONFIG.yaml and adjust the settings for them to apply
+slskd:
+  # The URL of your SLSKD server
+  HOST: "http://localhost:5300"
+  # The API key of your SLSKD server. It should be available in your SLSKD config file
+  API_KEY: "somerandomkeyhere"
+  # The path to the download folder of SLSKD
+  SLSKD_DOWNLOADS: "/path/to/slskd/download/complete/folder"
+
+listenbrainz:
+  # The recommendations of the user you wish to get. Must have a public profile.
+  USERNAME: "YourUsernameHere"
+  # any email address you control
+  EMAIL: "example@gmail.com"
+  # The number of recommendations to get from musicbrainz at once
+  NUMBER_OF_RECOMMENDATIONS: 25
+
+beets:
+  # if you aren't using beets, keep this false and ignore the other settings in this section
+  ENABLE_BEETS: false
+  # The path to your already imported beets music
+  BEETS_IMPORTED: "/path/to/folder/with/imported/beets"
+  # The path to your beets config.yaml file
+  BEETS_CONFIG: "/path/to/folder/with/beets/config/config.yaml"
+  # The path to your beets database file
+  BEETS_DATABASE: "/mnt/beets/beets/library.db"
