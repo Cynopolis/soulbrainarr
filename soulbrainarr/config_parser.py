@@ -46,7 +46,7 @@ class BEETS:
     BEETS_CONFIG: str
     BEETS_DATABASE: str
 
-    FILE_PATHS_KEY: str = "filePaths"
+    FILE_PATHS_KEY: str = "beets"
 
 
 @dataclass
