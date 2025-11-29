@@ -76,10 +76,9 @@ def attempt_each_download(search_responses: list[SearchResponseItem]) -> bool:
 
 
 async def main():
-    # print("Starting test")
-    # SEARCH_RESULTS = await search_slskd("Bondgirl Scary Goldings")
-    # print(json.dumps(SEARCH_RESULTS, indent=2))
-    from .example_search import SEARCH_RESULTS
+    print("Starting test")
+    SEARCH_RESULTS = await search_slskd("Bondgirl Scary Goldings")
+    print(json.dumps(SEARCH_RESULTS, indent=2))
     if attempt_each_download(SEARCH_RESULTS):
         print("Download succeeded")
     else:

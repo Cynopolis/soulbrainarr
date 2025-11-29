@@ -4,10 +4,9 @@ Get song recommendations from ListenBrainz and download them with your slskd ins
 
 # Setup
 
-## Dockerfile Environment Variables
+## Environment Variables
 
-### RUN_INTERVAL
+### CONFIG_PATH
 
-- Default Value: 600 seconds
-
-This controls how frequently the script will run.
+- Default: config/CONFIG.yaml
+  Path to the config file.

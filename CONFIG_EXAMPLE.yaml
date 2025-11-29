@@ -24,3 +24,9 @@ beets:
   BEETS_CONFIG: "/path/to/folder/with/beets/config/config.yaml"
   # The path to your beets database file
   BEETS_DATABASE: "/mnt/beets/beets/library.db"
+
+soulbrainarr:
+  # How long to wait before running the script again
+  RUN_INTERVAL_MINUTES: 5
+  # The number of songs recommendations to grab each run
+  SONG_BATCH_SIZE: 15

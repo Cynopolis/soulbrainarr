@@ -8,11 +8,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+ENV CONFIG_PATH /config/CONFIG.yaml
+
 # Copy the rest of the application
 COPY . .
-
-# Default interval (600 seconds)
-ENV RUN_INTERVAL=600
 
 # Ensure config folder exists (in case user forgets to mount one)
 RUN mkdir -p /app/config

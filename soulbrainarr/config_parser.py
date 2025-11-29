@@ -14,7 +14,7 @@ def get_config_base_path() -> str:
     2. Current directory 'CONFIG.yaml'
     """
     path_to_return: str = "CONFIG.yaml"
-    env_path = os.environ.get("CONFIG_PATH")
+    env_path = os.getenv("CONFIG_PATH", "/config/CONFIG.yaml")
     if env_path and env_path.strip():
         path_to_return = env_path.strip()
 
@@ -46,7 +46,15 @@ class BEETS:
     BEETS_CONFIG: str
     BEETS_DATABASE: str
 
-    FILE_PATHS_KEY: str = "filePaths"
+    BEETS_KEY: str = "beets"
+
+
+@dataclass
+class SOULBRAINARR_DATA:
+    RUN_INTERVAL_MINUTES: int
+    SONG_BATCH_SIZE: int
+
+    SOULBRAINARR_KEY: str = "soulbrainarr"
 
 
 @dataclass
@@ -54,6 +62,7 @@ class CONFIG_DATA:
     SLSKD: SLSKD_CONFIG
     LISTEN_BRAINZ: LISTEN_BRAINZ_CONFIG
     BEETS: BEETS
+    SOULBRAINARR: SOULBRAINARR_DATA
 
 
 def get_config() -> Optional[CONFIG_DATA]:
@@ -69,7 +78,9 @@ def get_config() -> Optional[CONFIG_DATA]:
             SLSKD=SLSKD_CONFIG(**yaml_doc[SLSKD_CONFIG.SLSKD_KEY]),
             LISTEN_BRAINZ=LISTEN_BRAINZ_CONFIG(
                 **yaml_doc[LISTEN_BRAINZ_CONFIG.LISTEN_BRAINZ_KEY]),
-            BEETS=BEETS(**yaml_doc[BEETS.FILE_PATHS_KEY])
+            BEETS=BEETS(**yaml_doc[BEETS.BEETS_KEY]),
+            SOULBRAINARR=SOULBRAINARR_DATA(
+                **yaml_doc[SOULBRAINARR_DATA.SOULBRAINARR_KEY])
         )
     except TypeError as e:
         print("Error Parsing Config", e)

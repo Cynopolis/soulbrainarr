@@ -1,7 +1,6 @@
 from time import time
 
 from beets.library import Library
-from rapidfuzz import process, fuzz
 
 from soulbrainarr.config_parser import get_config, CONFIG_DATA
 from soulbrainarr.song import Song
@@ -32,6 +31,7 @@ class ImportedSongsIndex:
 
             # Keep list of titles for fuzzy search
             self.title_list.append(song.song_title)
+        print("Succesfully loaded beets library")
 
     # -----------------------------
     # Exact lookup
@@ -39,21 +39,16 @@ class ImportedSongsIndex:
     def has_song_exact(self, song: Song) -> bool:
         key = (song.song_title.lower(), song.artist.lower())
         return key in self.title_artist_index
-
-
-if CONFIG.BEETS.ENABLE_BEETS:
-    BEETS_DATABASE: ImportedSongsIndex = ImportedSongsIndex(
-        CONFIG.BEETS.BEETS_DATABASE)
-
 # -----------------------------
 # Remove already downloaded songs
 # -----------------------------
 
 
-def is_song_in_database(song: Song) -> bool:
+def is_song_in_database(song: Song, database: ImportedSongsIndex) -> bool:
     if not CONFIG.BEETS.ENABLE_BEETS:
         return False
-    for other_song in BEETS_DATABASE.songs:
+
+    for other_song in database.songs:
         if song == other_song:
             return True
 
@@ -64,17 +59,20 @@ def remove_already_downloaded_songs(recommendations: list[Song]) -> list[Song]:
     if not CONFIG.BEETS.ENABLE_BEETS:
         return recommendations
 
+    database: ImportedSongsIndex = ImportedSongsIndex(
+        CONFIG.BEETS.BEETS_DATABASE)
+
     new_recs: list[Song] = []
     enable_benchmarking: bool = False
 
     for rec in recommendations:
         start_time = time()
-        has_song: bool = BEETS_DATABASE.has_song_exact(rec)
+        has_song: bool = database.has_song_exact(rec)
         if enable_benchmarking:
             print(f"exact check: {time() - start_time}")
         if not has_song:
             start_time = time()
-            has_song = is_song_in_database(rec)
+            has_song = is_song_in_database(rec, database)
             if enable_benchmarking:
                 print(f"fuzzy check: {time() - start_time}")
             if not has_song:

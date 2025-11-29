@@ -4,17 +4,22 @@
 mkdir -p /config
 
 # Copy example config if no config exists
-if [ ! -f /app/config/CONFIG.yaml ]; then
-    echo "CONFIG.yaml not found; creating from CONFIG_EXAMPLE.yaml"
-    cp /app/CONFIG_EXAMPLE.yaml /config/CONFIG.yaml
+if [ ! -f "${CONFIG_PATH}" ]; then
+    echo "${CONFIG_PATH} not found; creating from CONFIG_EXAMPLE.yaml"
+    cp /app/CONFIG_EXAMPLE.yaml "${CONFIG_PATH}"
 fi
+
+echo "===== VERSION ====="
+if [ -f /app/VERSION ]; then
+    cat /app/VERSION
+else
+    echo "VERSION file not found at /app/VERSION"
+fi
+echo "\n==================="
 
 echo "===== Environment Variables ====="
 printenv
 echo "================================="
 
-# Main loop
-while true; do
-    python -m soulbrainarr
-    sleep "${RUN_INTERVAL:-600}"
-done
+# Launch the application
+python -u -m soulbrainarr

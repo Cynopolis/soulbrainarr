@@ -43,7 +43,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          visibility: public
           tags: |
             ${{ env.IMAGE }}:latest
             ${{ env.IMAGE }}:${{ env.VERSION }}
