@@ -4,4 +4,9 @@ Get song recommendations from ListenBrainz and download them with your slskd ins
 
 # Setup
 
-TODO
+## Environment Variables
+
+### CONFIG_PATH
+
+- Default: config/CONFIG.yaml
+  Path to the config file.

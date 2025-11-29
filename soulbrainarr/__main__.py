@@ -57,10 +57,16 @@ async def main(song_batch_size: int, song_rec_offset: int):
         print("No Downloads to Queue.")
     print("================================")
 
-if __name__ == "__main__":
+
+async def looper():
     run_interval_seconds: int = CONFIG.SOULBRAINARR.RUN_INTERVAL_MINUTES * 60
     song_offset: int = 0
     while True:
-        asyncio.run(main(CONFIG.SOULBRAINARR.SONG_BATCH_SIZE, song_offset))
+        await main(CONFIG.SOULBRAINARR.SONG_BATCH_SIZE, song_offset)
         song_offset += CONFIG.SOULBRAINARR.SONG_BATCH_SIZE
+        print(
+            f"Sleeping for {CONFIG.SOULBRAINARR.RUN_INTERVAL_MINUTES} minutes")
         sleep(run_interval_seconds)
+
+if __name__ == "__main__":
+    asyncio.run(looper())
