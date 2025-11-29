@@ -9,6 +9,14 @@ if [ ! -f "${CONFIG_PATH}" ]; then
     cp /app/CONFIG_EXAMPLE.yaml "${CONFIG_PATH}"
 fi
 
+echo "===== VERSION ====="
+if [ -f /app/VERSION ]; then
+    cat /app/VERSION
+else
+    echo "VERSION file not found at /app/VERSION"
+fi
+echo "==================="
+
 echo "===== Environment Variables ====="
 printenv
 echo "================================="
