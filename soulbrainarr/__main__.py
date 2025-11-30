@@ -52,7 +52,7 @@ async def main(song_batch_size: int, song_rec_offset: int):
 
     if len(recommendations) > 0:
         print("Queueing Downloads")
-        asyncio.run(search_and_download_recommendations(recommendations))
+        await search_and_download_recommendations(recommendations)
     else:
         print("No Downloads to Queue.")
     print("================================")

@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Optional
-from rapidfuzz import fuzz
+# from rapidfuzz import fuzz
+from rapidfuzz.distance import Levenshtein
 
 from slskd_api.apis._types import SearchResponseItem
 
@@ -20,7 +21,7 @@ class Song:
         return f"{self.song_title} by {self.artist}"
 
     def __eq__(self, other: Song) -> bool:
-        FUZZY_THRESHOLD_TITLE: float = 0.8
+        FUZZY_THRESHOLD_TITLE: float = 0.95
         FUZZY_THRESHOLD_ARTIST: float = 0.8
         FUZZY_THRESHOLD_ALBUM: float = 0.8
 
@@ -28,7 +29,8 @@ class Song:
         if self.song_title and other.song_title:
             exact_title = self.song_title == other.song_title
             fuzzy_title = (
-                fuzz.token_sort_ratio(self.song_title, other.song_title)
+                Levenshtein.normalized_similarity(
+                    self.song_title, other.song_title)
                 >= FUZZY_THRESHOLD_TITLE
             )
             song_title_is_same = exact_title or fuzzy_title
@@ -39,7 +41,7 @@ class Song:
         if self.artist and other.artist:
             exact_artist = self.artist == other.artist
             fuzzy_artist = (
-                fuzz.token_sort_ratio(self.artist, other.artist)
+                Levenshtein.normalized_similarity(self.artist, other.artist)
                 >= FUZZY_THRESHOLD_ARTIST
             )
             artist_is_same = exact_artist or fuzzy_artist
@@ -50,7 +52,7 @@ class Song:
         if self.album and other.album:
             exact_album = self.album == other.album
             fuzzy_album = (
-                fuzz.token_sort_ratio(self.album, other.album)
+                Levenshtein.normalized_similarity(self.album, other.album)
                 >= FUZZY_THRESHOLD_ALBUM
             )
             album_is_same = exact_album or fuzzy_album

@@ -38,7 +38,10 @@ class ImportedSongsIndex:
     # -----------------------------
     def has_song_exact(self, song: Song) -> bool:
         key = (song.song_title.lower(), song.artist.lower())
-        return key in self.title_artist_index
+        has_song: bool = key in self.title_artist_index
+        if has_song:
+            print(f"Exact match found for song {song}")
+        return has_song
 # -----------------------------
 # Remove already downloaded songs
 # -----------------------------
@@ -50,6 +53,7 @@ def is_song_in_database(song: Song, database: ImportedSongsIndex) -> bool:
 
     for other_song in database.songs:
         if song == other_song:
+            print(f"Fuzzy Match for {song} found with song {other_song}")
             return True
 
     return False
