@@ -12,8 +12,6 @@ listenbrainz:
   USERNAME: "YourUsernameHere"
   # any email address you control
   EMAIL: "example@gmail.com"
-  # The number of recommendations to get from musicbrainz at once
-  NUMBER_OF_RECOMMENDATIONS: 25
 
 beets:
   # if you aren't using beets, keep this false and ignore the other settings in this section

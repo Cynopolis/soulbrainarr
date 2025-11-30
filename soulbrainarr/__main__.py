@@ -29,15 +29,15 @@ async def search_and_download_recommendations(recs: list[Song]):
 
 
 async def main(song_batch_size: int, song_rec_offset: int):
-    # Get a recommendations list
-    number_recommendations: int = 10
     print("================================")
 
-    print(f"Getting {number_recommendations} recommendations:")
+    print(
+        f"Getting {song_batch_size} recommendations with offset {song_rec_offset}:")
     recommendations: list[Song] = get_recommendation_list(
         CONFIG.LISTEN_BRAINZ.USERNAME,
         CONFIG.LISTEN_BRAINZ.EMAIL,
-        number_recommendations=number_recommendations
+        song_batch_size,
+        recommendation_offset=song_rec_offset
     )
 
     # List all of the recommendations in the logs

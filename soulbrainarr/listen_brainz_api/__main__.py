@@ -22,6 +22,7 @@ def _send_receive(
     sleep_between_attempts_seconds: float = 1
     for attempt in range(1, max_retries + 1):
         try:
+            # TODO: Conert this function to use async http library like aiohttp
             resp = requests.get(url, params=params,
                                 headers=headers, timeout=timeout)
 
@@ -65,7 +66,7 @@ def _send_receive(
 def _fetch_cf_recommendations(
     username: str,
     header: dict[str, str],
-    count: int = 20,
+    count: int,
     offset: int = 0,
     timeout: float = 1.0,
     max_retries: int = 3,
@@ -142,7 +143,7 @@ def _resolve_recording_mbid(
     return artist, title
 
 
-def get_recommendation_list(username: str, email: str, number_recommendations: int = 10) -> list[Song]:
+def get_recommendation_list(username: str, email: str, number_recommendations: int, recommendation_offset: int = 0) -> list[Song]:
     """
     Get a list of recommendations from ListenBrainz
     """
@@ -150,7 +151,7 @@ def get_recommendation_list(username: str, email: str, number_recommendations: i
         "User-Agent": f"LB-Recommendation-Script/1.0 ( {email} )"
     }
     listenbrainz_suggestions_ids = _fetch_cf_recommendations(
-        username, headers, count=number_recommendations)
+        username, headers, number_recommendations, offset=recommendation_offset)
     recommendations: list[Song] = []
 
     for suggestion in listenbrainz_suggestions_ids:
@@ -167,6 +168,6 @@ if __name__ == "__main__":
     from soulbrainarr.config_parser import CONFIG_DATA, get_config
     CONFIG: CONFIG_DATA = get_config()
     recs: list[Song] = get_recommendation_list(
-        CONFIG.LISTEN_BRAINZ.USERNAME, CONFIG.LISTEN_BRAINZ.EMAIL)
+        CONFIG.LISTEN_BRAINZ.USERNAME, CONFIG.LISTEN_BRAINZ.EMAIL, 10)
     for rec in recs:
         print(rec)

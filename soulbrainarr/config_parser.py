@@ -34,7 +34,6 @@ class SLSKD_CONFIG:
 class LISTEN_BRAINZ_CONFIG:
     USERNAME: str
     EMAIL: str
-    NUMBER_OF_RECOMMENDATIONS: int
 
     LISTEN_BRAINZ_KEY: str = "listenbrainz"
 
