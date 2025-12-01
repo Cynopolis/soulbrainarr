@@ -44,6 +44,7 @@ class BEETS:
     BEETS_IMPORTED: str
     BEETS_CONFIG: str
     BEETS_DATABASE: str
+    BEETS_REQUIREMENTS: str
 
     BEETS_KEY: str = "beets"
 

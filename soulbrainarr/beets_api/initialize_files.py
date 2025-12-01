@@ -1,5 +1,6 @@
 import sqlite3
 from pathlib import Path
+import subprocess
 from soulbrainarr.config_parser import get_config, CONFIG_DATA
 
 
@@ -30,6 +31,7 @@ def init_beets() -> None:
     config_file = Path(config.BEETS.BEETS_CONFIG).expanduser()
     db_file = Path(config.BEETS.BEETS_DATABASE).expanduser()
     music_folder_path = Path(config.SLSKD.SLSKD_DOWNLOADS).expanduser()
+    requirements_file = Path(config.BEETS.BEETS_REQUIREMENTS).expanduser()
 
     # --- Ensure directory structure exists ---
     config_file.parent.mkdir(parents=True, exist_ok=True)
@@ -50,3 +52,14 @@ def init_beets() -> None:
         conn = sqlite3.connect(db_file)
         conn.close()
         print(f"[beets] Created empty database file: {db_file}")
+
+    # --- 3. Install requirements if the file exists ---
+    if requirements_file.exists():
+        print(
+            f"[beets] Installing Python dependencies from: {requirements_file}")
+        subprocess.check_call(
+            ["python", "-m", "pip", "install", "-r", str(requirements_file)]
+        )
+    else:
+        print(
+            f"[beets] No requirements.txt found at: {requirements_file}. Skipping this optional step.")
