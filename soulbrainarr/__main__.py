@@ -8,6 +8,7 @@ from .listen_brainz_api import get_recommendation_list
 from .slskd_api import search_slskd, attempt_downloads, wait_for_downloads_to_complete
 from .beets_api.duplicate_tools import skip_already_downloaded_songs
 from .beets_api.import_tools import run_import, run_deduplicate
+from .beets_api.initialize_files import init_beets
 
 CONFIG: CONFIG_DATA = get_config()
 
@@ -70,6 +71,8 @@ async def main(song_batch_size: int, song_rec_offset: int):
 
 
 async def looper():
+    # Make sure beets will be initialized correctly
+    init_beets()
     run_interval_seconds: int = CONFIG.SOULBRAINARR.RUN_INTERVAL_MINUTES * 60
     song_offset: int = 0
     while True:
