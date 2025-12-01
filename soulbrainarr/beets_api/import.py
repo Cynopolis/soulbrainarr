@@ -2,23 +2,33 @@ import subprocess
 import re
 import os
 from pathlib import Path
+from soulbrainarr.config_parser import get_config, CONFIG_DATA
 
 FAILED_PATTERNS = [
     "Skipping",
     "No match found",
-    "\[F\]",
-    "\[D\]",
+    r"\[F\]",
+    r"\[D\]",
 ]
 
 PATH_REGEX = re.compile(r"(/[^:\n]+)")
 
 
-def run_beet_cmd(args: list[str]) -> tuple[str, str]:
+def run_beet_cmd(
+    args: list[str],
+) -> tuple[str, str]:
     """
     Runs a beet command in non-interactive mode (-q -y).
+    Explicitly uses the provided config.yaml and library.db paths.
     Returns (stdout, stderr).
     """
-    cmd = ["beet"] + args + ["-q", "-y"]
+    config: CONFIG_DATA = get_config()
+    cmd = [
+        "beet",
+        "-c", config.BEETS.BEETS_CONFIG,
+        "-l", config.BEETS.BEETS_DATABASE,
+    ] + args + ["-q", "-y"]
+
     proc = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
