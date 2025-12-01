@@ -48,9 +48,6 @@ class ImportedSongsIndex:
 
 
 def is_song_in_database(song: Song, database: ImportedSongsIndex) -> bool:
-    if not CONFIG.BEETS.ENABLE_BEETS:
-        return False
-
     for other_song in database.songs:
         if song == other_song:
             print(f"Fuzzy Match for {song} found with song {other_song}")
@@ -60,9 +57,6 @@ def is_song_in_database(song: Song, database: ImportedSongsIndex) -> bool:
 
 
 def skip_already_downloaded_songs(recommendations: list[Song]) -> list[Song]:
-    if not CONFIG.BEETS.ENABLE_BEETS:
-        return recommendations
-
     database: ImportedSongsIndex = ImportedSongsIndex(
         CONFIG.BEETS.BEETS_DATABASE)
 

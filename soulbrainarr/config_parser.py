@@ -40,7 +40,7 @@ class LISTEN_BRAINZ_CONFIG:
 
 @dataclass
 class BEETS:
-    ENABLE_BEETS: bool
+    AUTO_REMOVE_DUPLICATES: bool
     BEETS_IMPORTED: str
     BEETS_CONFIG: str
     BEETS_DATABASE: str

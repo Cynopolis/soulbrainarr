@@ -9,4 +9,5 @@ Get song recommendations from ListenBrainz and download them with your slskd ins
 ### CONFIG_PATH
 
 - Default: config/CONFIG.yaml
-  Path to the config file.
+
+Path to the config file.

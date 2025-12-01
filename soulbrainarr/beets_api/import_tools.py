@@ -110,3 +110,26 @@ def run_import(folder: str) -> dict:
             }
 
     return result
+
+
+def delete_duplicates() -> tuple[str, str]:
+    """
+    Deletes duplicate tracks using:
+        beet duplicates -d
+    Returns (stdout, stderr).
+    """
+    # -d = delete duplicates
+    return run_beet_cmd(["duplicates", "-d"])
+
+
+def run_deduplicate() -> dict:
+    """
+    Runs duplicate detection + deletion via beets.
+    Returns a dict containing the output for logging or UI display.
+    """
+    out, err = delete_duplicates()
+    return {
+        "stdout": out,
+        "stderr": err,
+        "combined_output": out + "\n" + err,
+    }
